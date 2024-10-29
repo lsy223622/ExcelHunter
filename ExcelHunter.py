@@ -15,15 +15,17 @@ def get_column_letter(col_idx):
     return result
 
 def search_excel_files(search_text):
+    """在Sheets目录下的所有Excel文件中搜索指定文本"""
     # 获取Sheets目录及其所有子目录下的Excel文件
     sheets_dir = Path('./Sheets')
-    excel_files = list(sheets_dir.rglob('*.xlsx')) + list(sheets_dir.rglob('*.xls'))  # 使用rglob进行递归搜索
+    excel_files = list(sheets_dir.rglob('*.xlsx')) + list(sheets_dir.rglob('*.xls'))
     
     if not excel_files:
         print("Sheets目录下没有找到Excel文件")
         return
     
-    found_files = 0  # 记录找到结果的文件数
+    found = False
+    found_files = 0
     
     for excel_file in excel_files:
         try:
@@ -41,7 +43,7 @@ def search_excel_files(search_text):
                             # 如果不是第一个有结果的文件，添加分隔行
                             if found_files > 0:
                                 print("\n" + "="*50 + "\n")
-                                found_files = 0  # 重置标记，避免重复打印分隔行
+                                found_files = 0
                             
                             found = True
                             file_match_count += 1

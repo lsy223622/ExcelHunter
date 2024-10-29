@@ -70,3 +70,4 @@ def search_excel_files(search_text):
 if __name__ == "__main__":
     search_text = input("请输入要搜索的文字: ")
     search_excel_files(search_text)
+    input("按回车键退出...")

@@ -26,30 +26,29 @@ def search_excel_files(search_text):
     
     for excel_file in excel_files:
         try:
-            # 读取Excel文件中的所有工作表
             excel = pd.ExcelFile(excel_file)
+            file_match_count = 0  # 为每个文件创建计数器
             
             for sheet_name in excel.sheet_names:
-                # 设置 nrows=None 确保读取所有行
                 df = pd.read_excel(excel_file, 
                                  sheet_name=sheet_name, 
-                                 nrows=None)  # 添加此参数
+                                 nrows=None)
                 
-                # 在数据框中搜索文本
-                match_count = 0  # 添加计数器用于调试
                 for row_idx, row in df.iterrows():
                     for col_idx, value in enumerate(row):
                         if isinstance(value, str) and search_text in value:
                             found = True
-                            match_count += 1  # 计数匹配项
+                            file_match_count += 1  # 累计到文件级别的计数器
                             excel_row = row_idx + 2
                             excel_col = get_column_letter(col_idx)
                             print(f"\n在文件 '{excel_file}' 中找到匹配：")
                             print(f"工作表: {sheet_name}")
                             print(f"位置: {excel_col}{excel_row}")
                             print(f"内容: {value}")
-                
-                print(f"\n在工作表 {sheet_name} 中共找到 {match_count} 个匹配项")  # 显示匹配总数
+            
+            # 在处理完文件的所有工作表后，显示该文件的总匹配数
+            if file_match_count > 0:
+                print(f"\n在文件 '{excel_file}' 中共找到 {file_match_count} 个匹配项")
     
         except Exception as e:
             print(f"处理文件 '{excel_file}' 时出错: {str(e)}")

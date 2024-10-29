@@ -1,5 +1,9 @@
 import pandas as pd
 from pathlib import Path
+import warnings
+
+# 忽略 openpyxl 的警告信息
+warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
 
 def search_excel_files(search_text):
     # 获取当前目录下所有的Excel文件

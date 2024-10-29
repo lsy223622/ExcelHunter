@@ -30,23 +30,30 @@ def search_excel_files(search_text):
             excel = pd.ExcelFile(excel_file)
             
             for sheet_name in excel.sheet_names:
-                df = pd.read_excel(excel_file, sheet_name=sheet_name)
+                # 设置 nrows=None 确保读取所有行
+                df = pd.read_excel(excel_file, 
+                                 sheet_name=sheet_name, 
+                                 nrows=None)  # 添加此参数
                 
                 # 在数据框中搜索文本
+                match_count = 0  # 添加计数器用于调试
                 for row_idx, row in df.iterrows():
                     for col_idx, value in enumerate(row):
                         if isinstance(value, str) and search_text in value:
                             found = True
-                            excel_row = row_idx + 2  # Excel行号从1开始，且pandas的index从0开始
-                            excel_col = get_column_letter(col_idx)  # 转换为Excel列字母
+                            match_count += 1  # 计数匹配项
+                            excel_row = row_idx + 2
+                            excel_col = get_column_letter(col_idx)
                             print(f"\n在文件 '{excel_file}' 中找到匹配：")
                             print(f"工作表: {sheet_name}")
                             print(f"位置: {excel_col}{excel_row}")
                             print(f"内容: {value}")
-                            
+                
+                print(f"\n在工作表 {sheet_name} 中共找到 {match_count} 个匹配项")  # 显示匹配总数
+    
         except Exception as e:
             print(f"处理文件 '{excel_file}' 时出错: {str(e)}")
-    
+
     if not found:
         print(f"\n在所有Excel文件中都没有找到 '{search_text}'")
 

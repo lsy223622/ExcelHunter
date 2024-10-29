@@ -5,6 +5,15 @@ import warnings
 # 忽略 openpyxl 的警告信息
 warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
 
+def get_column_letter(col_idx):
+    """将数字列索引转换为Excel列字母"""
+    result = ""
+    while col_idx >= 0:
+        col_idx, remainder = divmod(col_idx, 26)
+        result = chr(65 + remainder) + result
+        col_idx -= 1
+    return result
+
 def search_excel_files(search_text):
     # 获取当前目录下所有的Excel文件
     excel_files = list(Path('.').glob('*.xlsx')) + list(Path('.').glob('*.xls'))
@@ -28,9 +37,11 @@ def search_excel_files(search_text):
                     for col_idx, value in enumerate(row):
                         if isinstance(value, str) and search_text in value:
                             found = True
+                            excel_row = row_idx + 2  # Excel行号从1开始，且pandas的index从0开始
+                            excel_col = get_column_letter(col_idx)  # 转换为Excel列字母
                             print(f"\n在文件 '{excel_file}' 中找到匹配：")
                             print(f"工作表: {sheet_name}")
-                            print(f"位置: 第{row_idx + 1}行, 第{col_idx + 1}列")
+                            print(f"位置: {excel_col}{excel_row}")
                             print(f"内容: {value}")
                             
         except Exception as e:

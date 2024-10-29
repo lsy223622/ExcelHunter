@@ -47,13 +47,16 @@ def search_excel_files(search_text):
                             file_match_count += 1
                             excel_row = row_idx + 2
                             excel_col = get_column_letter(col_idx)
-                            print(f"\n在文件 '{excel_file}' 中找到匹配：")
+                            # 使用 relative_to 去除 Sheets 目录前缀
+                            relative_path = excel_file.relative_to(sheets_dir)
+                            print(f"\n在文件 '{relative_path}' 中找到匹配：")
                             print(f"工作表: {sheet_name}")
                             print(f"位置: {excel_col}{excel_row}")
                             print(f"内容: {value}")
             
             if file_match_count > 0:
-                print(f"\n在文件 '{excel_file}' 中共找到 {file_match_count} 个匹配项")
+                relative_path = excel_file.relative_to(sheets_dir)
+                print(f"\n在文件 '{relative_path}' 中共找到 {file_match_count} 个匹配项")
                 found_files += 1
     
         except Exception as e:

@@ -22,14 +22,10 @@ def search_excel_files(search_text):
         print("当前目录下没有找到Excel文件")
         return
     
-    found = False
+    found_files = 0  # 记录找到结果的文件数
     
-    for i, excel_file in enumerate(excel_files):
+    for excel_file in excel_files:
         try:
-            # 如果不是第一个文件，在文件结果之前添加分隔行
-            if i > 0:
-                print("\n" + "="*50 + "\n")
-                
             excel = pd.ExcelFile(excel_file)
             file_match_count = 0
             
@@ -41,6 +37,11 @@ def search_excel_files(search_text):
                 for row_idx, row in df.iterrows():
                     for col_idx, value in enumerate(row):
                         if isinstance(value, str) and search_text in value:
+                            # 如果不是第一个有结果的文件，添加分隔行
+                            if found_files > 0:
+                                print("\n" + "="*50 + "\n")
+                                found_files = 0  # 重置标记，避免重复打印分隔行
+                            
                             found = True
                             file_match_count += 1
                             excel_row = row_idx + 2
@@ -52,6 +53,7 @@ def search_excel_files(search_text):
             
             if file_match_count > 0:
                 print(f"\n在文件 '{excel_file}' 中共找到 {file_match_count} 个匹配项")
+                found_files += 1
     
         except Exception as e:
             print(f"处理文件 '{excel_file}' 时出错: {str(e)}")

@@ -24,10 +24,14 @@ def search_excel_files(search_text):
     
     found = False
     
-    for excel_file in excel_files:
+    for i, excel_file in enumerate(excel_files):
         try:
+            # 如果不是第一个文件，在文件结果之前添加分隔行
+            if i > 0:
+                print("\n" + "="*50 + "\n")
+                
             excel = pd.ExcelFile(excel_file)
-            file_match_count = 0  # 为每个文件创建计数器
+            file_match_count = 0
             
             for sheet_name in excel.sheet_names:
                 df = pd.read_excel(excel_file, 
@@ -38,7 +42,7 @@ def search_excel_files(search_text):
                     for col_idx, value in enumerate(row):
                         if isinstance(value, str) and search_text in value:
                             found = True
-                            file_match_count += 1  # 累计到文件级别的计数器
+                            file_match_count += 1
                             excel_row = row_idx + 2
                             excel_col = get_column_letter(col_idx)
                             print(f"\n在文件 '{excel_file}' 中找到匹配：")
@@ -46,7 +50,6 @@ def search_excel_files(search_text):
                             print(f"位置: {excel_col}{excel_row}")
                             print(f"内容: {value}")
             
-            # 在处理完文件的所有工作表后，显示该文件的总匹配数
             if file_match_count > 0:
                 print(f"\n在文件 '{excel_file}' 中共找到 {file_match_count} 个匹配项")
     

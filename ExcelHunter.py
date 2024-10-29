@@ -15,11 +15,12 @@ def get_column_letter(col_idx):
     return result
 
 def search_excel_files(search_text):
-    # 获取当前目录下所有的Excel文件
-    excel_files = list(Path('.').glob('*.xlsx')) + list(Path('.').glob('*.xls'))
+    # 获取Sheets目录及其所有子目录下的Excel文件
+    sheets_dir = Path('./Sheets')
+    excel_files = list(sheets_dir.rglob('*.xlsx')) + list(sheets_dir.rglob('*.xls'))  # 使用rglob进行递归搜索
     
     if not excel_files:
-        print("当前目录下没有找到Excel文件")
+        print("Sheets目录下没有找到Excel文件")
         return
     
     found_files = 0  # 记录找到结果的文件数
